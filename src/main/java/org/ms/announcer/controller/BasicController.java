@@ -19,14 +19,19 @@ public class BasicController {
     @Setter(onMethod_ = {@Autowired} )
     BCBoardService bcboardService;
 
-    @GetMapping("/register" )
-    public void getRegister() {
+    @GetMapping("/wishlist" )
+    public void indexTest() {
         System.out.println("들어왔나요??");
     }
 
-    @GetMapping("/bclist" )
+    @GetMapping("/totallist" )
+    public void total() {
+        System.out.println("들어왔나요??");
+    }
+
+    @GetMapping("/todayList" )
     public void getbclist(Model model) {
-        model.addAttribute("list", bcboardService.getlist());
+        
     }
     
 }

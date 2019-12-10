@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Today BrodCastList</h1>
+    <form action="/register.html"> 
+        <input value="등록하기" type="submit">
+    </form>
+    <div id="listdiv" >
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+
+    <script>
+        var listdiv = $("#listdiv");
+        var pagediv = $("#pagediv");
+
+        //반복하는 코드 
+     playAlert = setInterval(function () {
+        var  hour = new Date().getHours() < 10 ? "0" + new Date().getHours() : new Date().getHours()
+        var  Minutes = new Date().getMinutes()< 10 ? "0" + new Date().getMinutes() : new Date().getMinutes()
+        var  seconds = new Date().getSeconds() < 10 ? "0" + new Date().getSeconds() : new Date().getSeconds();
+        var now = hour+""+Minutes
+        console.log(now)
+        console.log("===============")
+        var target = "#"+now;
+        if($(target).length == 1 ){
+            $(target)[0].play()
+        }
+    }, 60000);
+
+        function appendlist(list) {
+            var str =""
+            list.content.forEach(list => {
+                var time = list.starttime.substring(0,5).replace(":","")
+                str += "<ul>"
+                  + "<li>bno: " + list.bno + "</li>" 
+                  + "<li>title: "+ list.title + "</li>" 
+                  + "<li>contnet: "+ list.contnet + "</li>" 
+                  + "<li>startdate: "+ list.startdate + "</li>" 
+                  + "<li>starttime: "+ list.starttime + "</li>" 
+                  + "<audio id='"+    time     +"' controls class='player'>"+     '<source id="sourcelink" src= "http://localhost:8080/rbcboard/'+  list.audioName   +'"">'+  "</audio>" 
+                  + "<li>filename: " +list.audioName + "</li>" +
+                        "</ul>"
+            });
+            listdiv.html(str)
+            $(".player")[0].load();
+        }
+
+        $(document).ready(function() {
+            var today = new Date();
+
+            console.log()
+            var day = ((today.getDate()).toString().length == 1? "0"+(today.getDate()):(today.getDate()));
+            var month = ((today.getMonth()+1).toString().length == 1? "0"+(today.getMonth()+1):(today.getMonth()+1));
+            var hour = today.getHours().toString().length == 1? "0"+today.getHours():today.getHours();
+            var minute = today.getMinutes().toString().length == 1? "0"+today.getMinutes():today.getMinutes();
+            var page = 1;
+            var date = today.getFullYear() + "-" + month + "-" + day;
+            var time = hour + ":" + minute;
+            console.log(today);
+
+            var json = {
+                page:page,
+                startdate: date,
+                starttime:time
+            }
+            console.log(json)
+            $.ajax({
+                url:"/rbcboard/todaylist/"+date,
+                type:"GET",
+                contentType: "application/json; charset=utf-8",
+                success:function(result){
+                    console.log(result)
+                    console.log("==================")
+                    console.log(result.content[0])
+                    console.log(result)
+                    appendlist(result)
+
+                }
+            })
+        })
+    
+    </script>
+</body>
+</html>
+</body>
+</html>
